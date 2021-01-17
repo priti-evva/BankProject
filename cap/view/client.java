@@ -2,6 +2,7 @@ package com.cap.view;
 import com.cap.exceptions.InsufficientBalanceException;
 import com.cap.exceptions.InsufficientOpeningAmountException;
 import com.cap.exceptions.InvalidAccountNumberException;
+import com.cap.service.BankRunnable;
 import com.cap.service.UKOBank;
 
 public class client {
@@ -19,41 +20,14 @@ public class client {
 			System.out.println("Insufficient Balance for Opening an account ");
 
 		}
-		try
-		{
-
-			System.out.println("Balance via withdraw = "+bank.withdrawAmount1(102, 500));
-
-		}
-		catch(InvalidAccountNumberException e)
-		{
-			System.out.println("Invalid account number ");
-
-		}
-		catch(InsufficientBalanceException e3) {
-			System.out.println("Insufficient Balance ");
-		}
-		try
-		{
-
-			System.out.println("Balance after deposite an amount = "+bank.amountDeposit(103,4000));
-		}catch(InvalidAccountNumberException e1)
-		{
-			System.out.println("Invalid account ");
-		}
-		try
-		{
-
-			System.out.println(bank.fundTransfer(101,102,500));
-		}catch(InsufficientBalanceException e2)
-		{
-			System.out.println("Insufficient Balance ");
-		}
-		catch(InvalidAccountNumberException e1)
-		{
-			System.out.println("Invalid account ");
-		}
-
+        BankRunnable bankRunner = new BankRunnable(bank);
+		
+		Thread childThread1=new Thread(bankRunner,"first");
+		childThread1.start();
+		
+		Thread childThread2=new Thread(bankRunner,"second");
+		childThread2.start();
+		
 	}
 }
 

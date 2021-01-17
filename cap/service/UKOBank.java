@@ -36,19 +36,25 @@ public   class UKOBank implements Bank {
 
 		throw new InvalidAccountNumberException();
 	}
-	public int withdrawAmount1(int accountNumber,int amount)throws InvalidAccountNumberException,InsufficientBalanceException
+	public  int withdrawAmount(int accountNumber,int amount)throws InvalidAccountNumberException,InsufficientBalanceException
 	{
 		Account account=searchAccount(accountNumber);
-
-		if((account.getAmount()-amount)>=0)
+		synchronized(account)
 		{
-			account.setAmount(account.getAmount()-amount);
-			return account.getAmount();
+			if(account.getAmount()-amount>=0)
+			{
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				account.setAmount(account.getAmount()-amount);
+			   return account.getAmount();
 		}
 
 		throw new InsufficientBalanceException();
-
-	}
+			}
+		}
 	public int amountDeposit(int accountNumber,int amount) throws InvalidAccountNumberException  {
 
 		Account account=searchAccount(accountNumber);
@@ -75,15 +81,6 @@ public   class UKOBank implements Bank {
 			throw new  InvalidAccountNumberException();
 		}
 	}
-
-
-	@Override
-	public int withdrawAmount(int accountNumber, int amount)
-			throws InvalidAccountNumberException, InsufficientBalanceException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 
 
 
